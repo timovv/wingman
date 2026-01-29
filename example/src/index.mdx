@@ -1,0 +1,31 @@
+import { Include, Skill, Instructions } from 'wingman/components';
+import TypescriptInstructions from './instructions/typescript.js';
+import { LanguageSpecificTestInstructions } from './language-test-instructions.js';
+
+# My Wingman Project
+
+Global instructions go here.
+
+- Always follow best practices
+- Write clean, maintainable code
+- Include tests for new functionality
+
+<Include src="code-review.md" />
+
+<TypescriptInstructions />
+
+<Instructions name="additional-instructions">
+These are more instructions, that go in a separate file.
+</Instructions>
+
+
+<Skill name="test-runner" description="Run and manage tests for the project. Use when the user asks to run tests, check test coverage, or debug failing tests.">
+## Test Runner Skill
+
+This skill helps you run and manage tests.
+
+### Usage
+When asked to run tests, use the appropriate test command for the project. It is:
+
+<LanguageSpecificTestInstructions />
+</Skill>

@@ -1,0 +1,52 @@
+{
+  "name": "wingman",
+  "version": "0.1.0",
+  "description": "MDX/JSX-based prompt compositor for agent instructions",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "wingman": "./bin/wingman.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./jsx-runtime": {
+      "types": "./dist/runtime/jsx-runtime.d.ts",
+      "import": "./dist/runtime/jsx-runtime.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc && node scripts/build-cli.js",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "keywords": [
+    "mdx",
+    "jsx",
+    "prompt",
+    "compositor",
+    "copilot",
+    "agent"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "^3.0.0",
+    "commander": "^12.0.0",
+    "esbuild": "^0.20.0"
+  }
+}

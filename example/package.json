@@ -1,0 +1,17 @@
+{
+  "name": "example-wingman-project",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "wingman build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "wingman": "file:.."
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}
