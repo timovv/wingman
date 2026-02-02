@@ -1,4 +1,7 @@
-import type { WingmanNode, Props } from '../runtime/component.js';
+import path from "path";
+import type { WingmanNode, Props } from "../runtime/component.js";
+import { useContext } from "../runtime/context.js";
+import { readFileSync } from "fs";
 
 export interface IncludeProps extends Props {
   /** Path to the file to include (relative to project src/) */
@@ -11,7 +14,10 @@ export interface IncludeProps extends Props {
  * The actual file loading is handled by the renderer.
  */
 export function Include(props: IncludeProps): WingmanNode {
-  // The renderer will detect this component and load the file
-  // This just returns a placeholder that gets replaced
-  return null;
+  const context = useContext();
+  const dir = context.targetDirectory;
+
+  const p = path.join(dir, props.src);
+  const content = readFileSync(p, "utf-8");
+  return `\n\n${content.trim()}\n`;
 }

@@ -25,16 +25,16 @@ export interface WingmanElement {
 /** Check if a node is an element */
 export function isElement(node: WingmanNode): node is WingmanElement {
   return (
-    typeof node === 'object' &&
+    typeof node === "object" &&
     node !== null &&
     !Array.isArray(node) &&
-    'type' in node
+    "type" in node
   );
 }
 
 /** Flatten nested arrays and filter out nullish values */
 export function flattenChildren(children: WingmanNode): WingmanNode[] {
-  if (children == null || typeof children === 'boolean') {
+  if (children == null || typeof children === "boolean") {
     return [];
   }
   if (Array.isArray(children)) {

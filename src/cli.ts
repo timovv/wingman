@@ -1,67 +1,63 @@
-import { program } from 'commander';
-import { compose, writeOutput } from './compositor/index.js';
-import { build } from './build.js';
-import * as path from 'path';
-import * as fs from 'fs/promises';
+import { program } from "commander";
+import { compose, writeOutput, cleanOutput } from "./compositor/index.js";
+import { build } from "./build.js";
+import * as path from "path";
+import * as fs from "fs/promises";
 
 program
-  .name('wingman')
-  .description('MDX/JSX-based prompt compositor for agent instructions')
-  .version('0.1.0');
+  .name("wingman")
+  .description("MDX/JSX-based prompt compositor for agent instructions")
+  .version("0.1.0");
 
 program
-  .command('build')
-  .description('Compile MDX and TSX files in a Wingman project')
-  .argument('[directory]', 'Project directory', process.cwd())
+  .command("build")
+  .description("Compile MDX and TSX files in a Wingman project")
+  .argument("[directory]", "Project directory", process.cwd())
   .action(async (directory: string) => {
     try {
       const projectDir = path.resolve(directory);
       console.log(`Building: ${projectDir}\n`);
-      
+
       const files = await build({ projectDir });
-      
+
       for (const file of files) {
         console.log(`Compiled: ${file}`);
       }
-      
+
       console.log(`\nBuild complete! (${files.length} files)`);
     } catch (error) {
-      console.error('Build failed:', error instanceof Error ? error.message : error);
+      console.error(
+        "Build failed:",
+        error instanceof Error ? error.message : error,
+      );
       process.exit(1);
     }
   });
 
 program
-  .command('install')
-  .description('Install a Wingman project into a repository')
-  .argument('<source>', 'Source path or npm package name')
-  .option('-t, --target-directory <path>', 'Target repository directory', process.cwd())
-  .option('--target <agent>', 'Target agent (copilot, claude)', 'copilot')
-  .option('--dry-run', 'Preview output without writing files')
-  .option('-o, --option <key=value...>', 'Additional context options (can be specified multiple times)')
+  .command("install")
+  .description("Install a Wingman project into a repository")
+  .argument("<source>", "Source path or npm package name")
+  .option(
+    "-t, --target-directory <path>",
+    "Target repository directory",
+    process.cwd(),
+  )
+  .option("--target <agent>", "Target agent (copilot, claude)", "copilot")
+  .option("--dry-run", "Preview output without writing files")
+  .option(
+    "-o, --option <key=value...>",
+    "Additional context options (can be specified multiple times)",
+  )
   .action(async (source: string, options) => {
     try {
-      // Resolve source path
       const sourceDir = await resolveSource(source);
-      
-      // Parse additional context options
-      const contextOptions: Record<string, string> = {};
-      if (options.option) {
-        for (const opt of options.option) {
-          const eqIndex = opt.indexOf('=');
-          if (eqIndex === -1) {
-            throw new Error(`Invalid option format: "${opt}". Expected key=value`);
-          }
-          const key = opt.slice(0, eqIndex);
-          const value = opt.slice(eqIndex + 1);
-          contextOptions[key] = value;
-        }
-      }
-      
+      const contextOptions = parseContextOptions(options.option);
+
       console.log(`Composing from: ${sourceDir}`);
       console.log(`Target directory: ${options.targetDirectory}`);
       console.log(`Target agent: ${options.target}`);
-      
+
       const result = await compose({
         sourceDir,
         targetDir: options.targetDirectory,
@@ -70,14 +66,14 @@ program
       });
 
       console.log(`\nGenerated ${result.files.length} file(s):`);
-      
+
       await writeOutput(options.targetDirectory, result.files, options.dryRun);
-      
+
       if (!options.dryRun) {
-        console.log('\nDone!');
+        console.log("\nDone!");
       }
     } catch (error) {
-      console.error('Error:', error instanceof Error ? error.message : error);
+      console.error("Error:", error instanceof Error ? error.message : error);
       process.exit(1);
     }
   });
@@ -103,9 +99,71 @@ async function resolveSource(source: string): Promise<string> {
   } catch {
     throw new Error(
       `Could not resolve source: "${source}". ` +
-      'Provide a local path or installed npm package name.'
+        "Provide a local path or installed npm package name.",
     );
   }
 }
+
+function parseContextOptions(optionArray: string[] | undefined): Record<string, string> {
+  const contextOptions: Record<string, string> = {};
+  if (optionArray) {
+    for (const opt of optionArray) {
+      const eqIndex = opt.indexOf("=");
+      if (eqIndex === -1) {
+        throw new Error(
+          `Invalid option format: "${opt}". Expected key=value`,
+        );
+      }
+      const key = opt.slice(0, eqIndex);
+      const value = opt.slice(eqIndex + 1);
+      contextOptions[key] = value;
+    }
+  }
+  return contextOptions;
+}
+
+program
+  .command("clean")
+  .description("Remove files generated by a Wingman project installation")
+  .argument("<source>", "Source path or npm package name")
+  .option(
+    "-t, --target-directory <path>",
+    "Target repository directory",
+    process.cwd(),
+  )
+  .option("--target <agent>", "Target agent (copilot, claude)", "copilot")
+  .option("--dry-run", "Preview files to remove without deleting")
+  .option(
+    "-o, --option <key=value...>",
+    "Additional context options (can be specified multiple times)",
+  )
+  .action(async (source: string, options) => {
+    try {
+      const sourceDir = await resolveSource(source);
+      const contextOptions = parseContextOptions(options.option);
+
+      console.log(`Cleaning files from: ${sourceDir}`);
+      console.log(`Target directory: ${options.targetDirectory}`);
+      console.log(`Target agent: ${options.target}`);
+
+      const result = await compose({
+        sourceDir,
+        targetDir: options.targetDirectory,
+        target: options.target,
+        contextOptions,
+      });
+
+      console.log(`\nRemoving ${result.files.length} file(s):`);
+
+      await cleanOutput(options.targetDirectory, result.files, options.dryRun);
+
+      if (!options.dryRun) {
+        console.log("\nDone!");
+      }
+    } catch (error) {
+      console.error("Error:", error instanceof Error ? error.message : error);
+      process.exit(1);
+    }
+  });
 
 program.parse();

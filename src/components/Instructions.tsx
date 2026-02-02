@@ -1,6 +1,6 @@
-import type { WingmanNode, Props } from '../runtime/component.js';
-import { OutputFile } from './OutputFile.js';
-import { Frontmatter } from './Frontmatter.js';
+import type { WingmanNode, Props } from "../runtime/component.js";
+import { OutputFile } from "./OutputFile.js";
+import { Frontmatter } from "./Frontmatter.js";
 
 export interface InstructionsProps extends Props {
   /** Glob pattern for files these instructions apply to */
@@ -17,11 +17,9 @@ export interface InstructionsProps extends Props {
  */
 export function Instructions(props: InstructionsProps): WingmanNode {
   const { applyTo, name, children } = props;
-  
-  const fileName = name ?? applyTo
-    .replace(/\*/g, '_')
-    .replace(/\./g, '-');
-  
+
+  const fileName = name ?? applyTo.replace(/\*/g, "_").replace(/\./g, "-");
+
   return (
     <OutputFile path={`.github/instructions/${fileName}.md`}>
       <Frontmatter data={{ applyTo }} />

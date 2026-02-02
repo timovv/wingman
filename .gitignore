@@ -5,10 +5,6 @@ node_modules/
 dist/
 out/
 
-# Editor
-.vscode/
-.idea/
-
 # OS
 .DS_Store
 

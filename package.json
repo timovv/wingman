@@ -23,7 +23,7 @@
     }
   },
   "scripts": {
-    "build": "tsc && node scripts/build-cli.js",
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "dev": "tsc --watch"
   },

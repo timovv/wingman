@@ -1,5 +1,10 @@
-import type { Component, Props, WingmanNode, WingmanElement } from './component.js';
-import { flattenChildren } from './component.js';
+import type {
+  Component,
+  Props,
+  WingmanNode,
+  WingmanElement,
+} from "./component.js";
+import { flattenChildren } from "./component.js";
 
 /** Fragment component - just returns its children */
 export function Fragment(props: { children?: WingmanNode }): WingmanNode {
@@ -10,7 +15,7 @@ export function Fragment(props: { children?: WingmanNode }): WingmanNode {
 export function jsx(
   type: Component | string,
   props: Props,
-  _key?: string
+  _key?: string,
 ): WingmanElement {
   const { children, ...restProps } = props;
   return {
@@ -24,7 +29,7 @@ export function jsx(
 export function jsxs(
   type: Component | string,
   props: Props,
-  _key?: string
+  _key?: string,
 ): WingmanElement {
   return jsx(type, props, _key);
 }

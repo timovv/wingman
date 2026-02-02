@@ -1,4 +1,4 @@
-import type { WingmanNode, Props } from '../runtime/component.js';
+import type { WingmanNode, Props } from "../runtime/component.js";
 
 export interface OutputFileProps extends Props {
   /** Output file path (relative to target directory) */

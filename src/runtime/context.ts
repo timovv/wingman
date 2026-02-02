@@ -12,9 +12,11 @@ export interface CompositorContext {
 let currentContext: CompositorContext | null = null;
 
 /** Get the current compositor context. Must be called during rendering. */
-export function useContext<T extends Record<string, unknown> = Record<string, never>>(): T & CompositorContext {
+export function useContext<
+  T extends Record<string, unknown> = Record<string, never>,
+>(): T & CompositorContext {
   if (!currentContext) {
-    throw new Error('useContext() must be called during composition');
+    throw new Error("useContext() must be called during composition");
   }
   return currentContext as T & CompositorContext;
 }
@@ -26,10 +28,10 @@ export function setContext(ctx: CompositorContext | null): void {
 
 /** Create a default context */
 export function createContext(
-  overrides: Partial<CompositorContext> = {}
+  overrides: Partial<CompositorContext> = {},
 ): CompositorContext {
   return {
-    agentName: 'copilot',
+    agentName: "copilot",
     targetDirectory: process.cwd(),
     platform: process.platform,
     ...overrides,

@@ -58,7 +58,7 @@ Contains instructions that only apply to TypeScript files. Controlled by the `<I
 ### `src/skills/test-skill/index.mdx`
 Defines a skill e.g. something like
 ```markdown
-<Skill name="test-skill">
+<Skill name="test-skill" description="My skill description">
   Insert instructions for skill
   
   You can also drop in other components such as tools which will get associated to the skill
@@ -68,7 +68,7 @@ Defines a skill e.g. something like
 You can also define components in TypeScript instead of MDX to allow for dynamic (compose-time) behavior. So, for example, you can emit different instructions depending on the operating system or agent target (e.g. different instructions for Copilot).
 ```tsx
 export const DynamicComponent = () => {
-  const context = useCompositor();
+  const context = useContext();
   
   if(context.agentName === "claude") {
     return "Providing Claude-specific instructions or a component";
